@@ -3,16 +3,18 @@ from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen, Request
 import requests
 from pprint import pprint
+import yaml
+from utils import getNYTUrl, getHeaders
+import ast
 
-apiUrl = 'https://api.nytimes.com/svc/news/v3/content/nyt/well.json?api-key=AuG5HVISw4jzEit5G0RkacWynWZ8jtTF'
+apiUrl = getNYTUrl()
 
 data = requests.get(apiUrl).text
-
 data = json.loads(data)
 
 for result in data["results"][10:11]:
     url = result["url"]
-    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    req = Request(url, headers=ast.literal_eval(getHeaders()))
     page = urlopen(req)
     soup = bs(page, 'html.parser')
     body =""

@@ -1,0 +1,7 @@
+APP:
+  AGENT: "User-Agent': 'Mozilla/5.0"
+
+API:
+  BASE_URL: "https://api.nytimes.com/svc/"
+  TIME_WIRES_CONTEXT: "news/v3/content/nyt/well.json?api-key="
+  HEADERS: "{'User-Agent': 'Mozilla/5.0'}"
