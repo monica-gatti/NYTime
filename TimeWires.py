@@ -21,8 +21,4 @@ for result in data["results"][10:11]:
     for t in soup.findAll("p", attrs={"class":"css-at9mc1 evys1bk0"}):#[0]#.findAll("td",attrs={"titleColumn"})
         print(t.text)
 
-    #body = soup.find("p", class_="css-at9mc1 evys1bk0").text
-
-    #for e in soup.select('div.css-at9mc1'):
-    #    print(e.text)
 
