@@ -7,7 +7,7 @@ import yaml
 from utils import getNYTUrl, getHeaders
 import ast
 
-apiUrl = getNYTUrl()
+apiUrl = getNYTUrl('TIME_WIRES_CONTEXT')
 
 data = requests.get(apiUrl).text
 data = json.loads(data)

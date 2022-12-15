@@ -8,11 +8,11 @@ def getNYTkey() -> str:
     stream.close()
     return key
 
-def getNYTUrl() -> str:
+def getNYTUrl(context) -> str:
     stream = open('./config/app.yaml', 'r')
     data = yaml.load(stream, Loader=yaml.BaseLoader)
     baseUrl = data.get('API').get('BASE_URL')
-    context = data.get('API').get('TIME_WIRES_CONTEXT')
+    context = data.get('API').get(context)
     stream.close()
     key = str(getNYTkey())
     return str(baseUrl) + str(context) + key
