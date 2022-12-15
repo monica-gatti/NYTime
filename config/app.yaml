@@ -1,4 +1,6 @@
 API:
   BASE_URL: "https://api.nytimes.com/svc/"
   TIME_WIRES_CONTEXT: "news/v3/content/nyt/well.json?api-key="
+  BOOKS_CONTEXT: "books/v3/lists/current/hardcover-fiction.json?api-key="
+  ARTICLES_CONTEXT: "search/v2/articlesearch.json?q=election&api-key="
   HEADERS: "{'User-Agent': 'Mozilla/5.0'}"
