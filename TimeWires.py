@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen, Request
 import requests
 from pprint import pprint
-import yaml
 from utils import getNYTUrl, getHeaders
 import ast
 
@@ -22,7 +21,7 @@ for result in data["results"][10:11]:
         body = body + t.text
     result["body"] = body
 
-with open("allnyt.json", "w") as jsonFile:
+with open("xxxxxxxx.json", "w") as jsonFile:
     json.dump(data, jsonFile)
 
 
