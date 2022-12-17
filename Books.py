@@ -2,9 +2,9 @@ import json
 import requests
 from pprint import pprint
 import yaml
-from utils import getNYTUrl, getHeaders
+from utils import getNYTUrl, getUserAgent
 
-apiUrl = getNYTUrl('BOOKS_CONTEXT')
+apiUrl = getNYTUrl(context_="BOOKS_CONTEXT")
 
 data = requests.get(apiUrl).text
 data = json.loads(data)

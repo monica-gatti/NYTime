@@ -3,4 +3,6 @@ API:
   TIME_WIRES_CONTEXT: "news/v3/content/nyt/well.json?api-key="
   BOOKS_CONTEXT: "books/v3/lists/current/hardcover-fiction.json?api-key="
   ARTICLES_CONTEXT: "search/v2/articlesearch.json?q=election&api-key="
-  HEADERS: "{'User-Agent': 'Mozilla/5.0'}"
+SCRAPING:
+  CROME_USER_AGENT: "{'User-Agent': 'Chrome/39.0.2171.95'}"  
+  MOZILLA_USER_AGENT: "{'User-Agent': 'Mozilla/5.0'}"
