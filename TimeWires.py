@@ -12,7 +12,7 @@ data = json.loads(data)
 
 for result in data["results"][10:11]:
     url = result["url"]
-    req = Request(url, headers=ast.literal_eval(getUserAgent(user_agent_="CROME_USER_AGENT")))
+    req = Request(url, headers=ast.literal_eval(getUserAgent(user_agent_="MOZILLA_USER_AGENT")))
     page = urlopen(req)
     soup = bs(page, 'html.parser')
     body =""
