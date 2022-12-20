@@ -5,13 +5,15 @@ import requests
 from pprint import pprint
 from utils import getNYTUrl, getUserAgent
 import ast
+from datetime import datetime
 
 apiUrl = getNYTUrl(context_="TIME_WIRES_CONTEXT")
 data = requests.get(apiUrl).text
 data = json.loads(data)
 
-for result in data["results"][10:11]:
+for result in data["results"]:
     url = result["url"]
+    print(url)
     req = Request(url, headers=ast.literal_eval(getUserAgent(user_agent_="MOZILLA_USER_AGENT")))
     page = urlopen(req)
     soup = bs(page, 'html.parser')
@@ -20,7 +22,12 @@ for result in data["results"][10:11]:
         body = body + t.text
     result["body"] = body
 
-with open("xxxxxxxx.json", "w") as jsonFile:
+now = datetime.now()
+dt_string = now.strftime("%d-%m-%Y_%H%M%S")
+
+filename = "./output/" + dt_string + "_timewires.json" 
+print(filename)
+with open(filename, "w") as jsonFile:
     json.dump(data, jsonFile)
 
 
