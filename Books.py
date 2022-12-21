@@ -2,9 +2,10 @@ import json
 import requests
 from pprint import pprint
 import yaml
-from utils import getNYTUrl, getHeaders
+from utils import getNYTUrl, getUserAgent
+from datetime import datetime
 
-apiUrl = getNYTUrl('BOOKS_CONTEXT')
+apiUrl = getNYTUrl(context_="BOOKS_CONTEXT")
 
 data = requests.get(apiUrl).text
 data = json.loads(data)
@@ -25,5 +26,9 @@ for index in range(0,len(data['results']['books'])):
     list_books.append(dictionnaire)
 pprint(list_books[0:5])
 
-with open("allnytBooks.json", "w") as jsonFile:
+now = datetime.now()
+dt_string = now.strftime("%d-%m-%Y_%H%M%S")
+
+filename = "./output/" + dt_string + "_books.json" 
+with open(filename, "w") as jsonFile:
     json.dump(data, jsonFile)
