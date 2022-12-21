@@ -7,7 +7,7 @@ user_agents = Literal["CROME_USER_AGENT","MOZILLA_USER_AGENT"]
 def getUserAgent(user_agent_: user_agents) -> str:
     '''
     Return the valid user agent to simulate a browser to get a web page
-    @user_agent: choose a User agent in the list to get the web page
+    @user_agent_: choose a User agent in the list to get the web page
     '''
     stream = open('./config/app.yaml', 'r')
     data = yaml.load(stream, Loader=yaml.BaseLoader)
@@ -24,8 +24,11 @@ def getNYTkey() -> str:
     stream.close()
     return key
 
-def getNYTUrl(#choose a context in the list to invoke the NY Times API
-    context_:contexts) -> str:
+def getNYTUrl(context_:contexts) -> str:
+    '''
+    Return the valid Url to invoke NYTimes API
+    @context_: choose a Url in the list
+    '''
     stream = open('./config/app.yaml', 'r')
     data = yaml.load(stream, Loader=yaml.BaseLoader)
     baseUrl = data.get('API').get('BASE_URL')
