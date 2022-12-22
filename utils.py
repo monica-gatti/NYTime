@@ -1,7 +1,7 @@
 import yaml
 from typing import Literal
 
-contexts = Literal["TIME_WIRES_CONTEXT", "BOOKS_CONTEXT", "ARTICLES_CONTEXT"]
+contexts = Literal["TIME_WIRES_CONTEXT", "BOOKS_CONTEXT", "ARTICLES_CONTEXT", "TIME_WIRES_SECTIONS_LIST"]
 user_agents = Literal["CROME_USER_AGENT","MOZILLA_USER_AGENT"]
 
 def getUserAgent(user_agent_: user_agents) -> str:

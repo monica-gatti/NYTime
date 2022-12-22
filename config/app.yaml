@@ -1,6 +1,7 @@
 API:
   BASE_URL: "https://api.nytimes.com/svc/"
-  TIME_WIRES_CONTEXT: "news/v3/content/nyt/well.json?api-key="
+  TIME_WIRES_CONTEXT: "news/v3/content/nyt/%s.json?api-key="
+  TIME_WIRES_SECTIONS_LIST: "news/v3/content/section-list.json?api-key="
   BOOKS_CONTEXT: "books/v3/lists/current/hardcover-fiction.json?api-key="
   ARTICLES_CONTEXT: "search/v2/articlesearch.json?q=election&api-key="
 SCRAPING:
