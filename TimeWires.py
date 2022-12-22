@@ -26,7 +26,6 @@ now = datetime.now()
 dt_string = now.strftime("%d-%m-%Y_%H%M%S")
 
 filename = "./output/" + dt_string + "_timewires.json" 
-print(filename)
 with open(filename, "w") as jsonFile:
     json.dump(data, jsonFile)
 
