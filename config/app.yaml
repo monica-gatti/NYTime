@@ -2,6 +2,7 @@ API:
   BASE_URL: "https://api.nytimes.com/svc/"
   TIME_WIRES_CONTEXT: "news/v3/content/nyt/well.json?api-key="
   BOOKS_CONTEXT: "books/v3/lists/current/hardcover-fiction.json?api-key="
+  MOVIES_REVIEWS_CONTEXT: "movies/v2/reviews/search.json?query=godfather&api-key="
   ARTICLES_CONTEXT: "search/v2/articlesearch.json?q=election&api-key="
 SCRAPING:
   CROME_USER_AGENT: "{'User-Agent': 'Chrome/39.0.2171.95'}"  
