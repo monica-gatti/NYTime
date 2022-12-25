@@ -6,28 +6,35 @@ from pprint import pprint
 from utils import getNYTUrl, getUserAgent
 import ast
 from datetime import datetime
+from string import Template
+from time import sleep
 
-apiUrl = getNYTUrl(context_="TIME_WIRES_CONTEXT")
-data = requests.get(apiUrl).text
-data = json.loads(data)
+sectionListUrl = getNYTUrl(context_="TIME_WIRES_SECTIONS_LIST")
+sectionListData = requests.get(sectionListUrl).text
+sectionListData = json.loads(sectionListData)
 
-for result in data["results"]:
-    url = result["url"]
-    print(url)
-    req = Request(url, headers=ast.literal_eval(getUserAgent(user_agent_="MOZILLA_USER_AGENT")))
-    page = urlopen(req)
-    soup = bs(page, 'html.parser')
-    body =""
-    for t in soup.findAll("p", attrs={"class":"css-at9mc1 evys1bk0"}):
-        body = body + t.text
-    result["body"] = body
+for element in sectionListData["results"][3:6]:
+    section = element["section"]
+    timeWireApiUrl = getNYTUrl(context_="TIME_WIRES_CONTEXT")
+    sectionUrl = timeWireApiUrl % section
+    sectionData = requests.get(sectionUrl).text
+    sectionData = json.loads(sectionData)
 
-now = datetime.now()
-dt_string = now.strftime("%d-%m-%Y_%H%M%S")
+    for result in sectionData["results"][1:2]:
+        url = result["url"]
+        req = Request(url, headers=ast.literal_eval(getUserAgent(user_agent_="MOZILLA_USER_AGENT")))
+        page = urlopen(req)
+        soup = bs(page, 'html.parser')
+        body =""
+        for t in soup.findAll("p", attrs={"class":"css-at9mc1 evys1bk0"}):
+            body = body + t.text
+        result["body"] = body
 
-filename = "./output/" + dt_string + "_timewires.json" 
-print(filename)
-with open(filename, "w") as jsonFile:
-    json.dump(data, jsonFile)
+    now = datetime.now()
+    dt_string = now.strftime("%d-%m-%Y_%H%M%S")
 
+    filename = "./output/" + section + dt_string + "_timewires.json" 
+    with open(filename, "w") as jsonFile:
+        json.dump(sectionData, jsonFile)    
+    sleep(6)
 
