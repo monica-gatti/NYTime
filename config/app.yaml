@@ -3,7 +3,7 @@ API:
   TIME_WIRES_CONTEXT: "news/v3/content/all/%s.json?limit=500&api-key="
   TIME_WIRES_CONTEXT_ALL: "news/v3/content/all/all.json?limit=500&api-key="
   TIME_WIRES_SECTIONS_LIST: "news/v3/content/section-list.json?api-key="
-  BOOKS_CONTEXT: "books/v3/lists/current/hardcover-fiction.json?api-key="
+  BOOKS_CONTEXT: "books/v3/lists/full-overview.json?api-key="
   MOVIES_REVIEWS_CONTEXT: "movies/v2/reviews/search.json?query=godfather&api-key="
   ARTICLES_CONTEXT: "search/v2/articlesearch.json?q=election&api-key="
 SCRAPING:
