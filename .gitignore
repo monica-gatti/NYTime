@@ -1,3 +1,6 @@
 
 config/nycred.yaml
 __pycache__/
+output/
+nytimes.db
+nytimes1.db

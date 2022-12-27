@@ -1,9 +1,13 @@
 API:
   BASE_URL: "https://api.nytimes.com/svc/"
-  TIME_WIRES_CONTEXT: "news/v3/content/nyt/%s.json?api-key="
+  TIME_WIRES_CONTEXT: "news/v3/content/all/%s.json?limit=500&api-key="
+  TIME_WIRES_CONTEXT_ALL: "news/v3/content/all/all.json?limit=500&api-key="
   TIME_WIRES_SECTIONS_LIST: "news/v3/content/section-list.json?api-key="
   BOOKS_CONTEXT: "books/v3/lists/current/hardcover-fiction.json?api-key="
   ARTICLES_CONTEXT: "search/v2/articlesearch.json?q=election&api-key="
 SCRAPING:
   CROME_USER_AGENT: "{'User-Agent': 'Chrome/39.0.2171.95'}"  
   MOZILLA_USER_AGENT: "{'User-Agent': 'Mozilla/5.0'}"
+ELASTIC_SEARCH:
+  API_URL: "http://54.247.12.163:9200"
+  INDEX: "test-index"

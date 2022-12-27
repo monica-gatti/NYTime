@@ -1,7 +1,9 @@
 import yaml
 from typing import Literal
+from datetime import datetime
+from elasticsearch import Elasticsearch
 
-contexts = Literal["TIME_WIRES_CONTEXT", "BOOKS_CONTEXT", "ARTICLES_CONTEXT", "TIME_WIRES_SECTIONS_LIST"]
+contexts = Literal["TIME_WIRES_CONTEXT", "BOOKS_CONTEXT", "ARTICLES_CONTEXT", "TIME_WIRES_SECTIONS_LIST", "TIME_WIRES_CONTEXT_ALL"]
 user_agents = Literal["CROME_USER_AGENT","MOZILLA_USER_AGENT"]
 
 def getUserAgent(user_agent_: user_agents) -> str:
@@ -36,3 +38,22 @@ def getNYTUrl(context_:contexts) -> str:
     stream.close()
     key = str(getNYTkey())
     return str(baseUrl) + str(context) + key
+
+def ingestForES(slugname:str, created_date, body: str,) -> None:
+    stream = open('./config/app.yaml', 'r')
+    data = yaml.load(stream, Loader=yaml.BaseLoader)
+    es_url = data.get('ELASTIC_SEARCH').get("API_URL")
+    es_index = data.get('ELASTIC_SEARCH').get("INDEX") 
+    stream.close()
+    es = Elasticsearch(es_url,basic_auth=("elastic", "datascientest"), verify_certs=False)  
+    doc = {
+        'slug_name': slugname,
+        'body':  body,
+        'created_date': created_date,
+    }
+    resp = es.index(index=es_index, id=slugname, document=doc)
+    print(resp['result'])
+
+def getStringCurrentDate() -> str:
+    now = datetime.now()
+    return now.strftime("%d-%m-%Y_%H%M%S")
