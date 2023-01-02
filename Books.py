@@ -1,34 +1,37 @@
+
 import json
+from urllib.request import urlopen, Request
+from utils import getNYTUrl,  getStringCurrentDate, ingestForES
+from bs4 import BeautifulSoup as bs
 import requests
 from pprint import pprint
-import yaml
-from utils import getNYTUrl, getUserAgent
-from datetime import datetime
+import ast
+import sqlite3 
+import logging
 
-apiUrl = getNYTUrl(context_="BOOKS_CONTEXT")
+logging.basicConfig(filename="./output/logBooks.log", level=logging.INFO)
 
-data = requests.get(apiUrl).text
+BOOKS_CONTEXT = getNYTUrl(context_="BOOKS_CONTEXT")
+data = requests.get(BOOKS_CONTEXT).text
 data = json.loads(data)
 
-list_books = []
-
-for index in range(0,len(data['results']['books'])):
-    title = (data['results']['books'][index]['title'])
-    author=(data['results']['books'][index]['author'])
-    rank=(data['results']['books'][index]['rank'])
-    isbn_pri = (data['results']['books'][index]['primary_isbn10'])
-    
-    dictionnaire = {'title': title,
-                    'author': author,
-                    'rank':rank,
-                    'isbn_pri' : isbn_pri
-                    }
-    list_books.append(dictionnaire)
-pprint(list_books[0:5])
-
-now = datetime.now()
-dt_string = now.strftime("%d-%m-%Y_%H%M%S")
-
-filename = "./output/" + dt_string + "_books.json" 
-with open(filename, "w") as jsonFile:
-    json.dump(data, jsonFile)
+for lists in data['results']['lists']:
+    for book in lists['books']:
+        con = sqlite3.connect('books.db')
+        cur = con.cursor()
+        try:  
+            cur.execute("INSERT INTO books_full_overview VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+            (book['title'], book['author'], book['contributor'], book['publisher'], book['rank'], book['primary_isbn10'], book['primary_isbn13'],book['updated_date'], book['created_date'],book[' amazon_product_url']))
+            con.commit()     
+        except  sqlite3.IntegrityError as err:
+            print(f"Integritya error {err=}, {type(err)=}")
+        try:
+            ingestForES(book['title'], book['author'], book['contributor'], book['publisher'],book[' descriptionbook'], book['rank'], book['primary_isbn10'], book['primary_isbn13'],book['updated_date'], book['created_date'],book[' amazon_product_url'], book['weeks_on_list'], book[' buy_links'])
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+    con.close()
+        
+    filename = "./output/" + getStringCurrentDate() + "_books_full_overview.json" 
+    with open(filename, "w") as jsonFile:
+        json.dump(data, jsonFile)    
+        

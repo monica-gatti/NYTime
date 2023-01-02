@@ -4,3 +4,4 @@ __pycache__/
 output/
 nytimes.db
 nytimes1.db
+books.db
