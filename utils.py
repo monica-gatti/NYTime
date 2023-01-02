@@ -16,9 +16,7 @@ def getUserAgent(user_agent_: user_agents) -> str:
     header = data.get('SCRAPING').get(user_agent_)
     stream.close()
     return header
-
-
-
+    
 def getNYTkey() -> str:
     stream = open('./config/nycred.yaml', 'r')
     data = yaml.load(stream, Loader=yaml.BaseLoader)
