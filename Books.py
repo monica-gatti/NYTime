@@ -2,7 +2,7 @@
 import json
 from urllib.request import urlopen, Request
 from utils import getNYTUrl,  getStringCurrentDate, ingestForES
-from bs4 import BeautifulSoup as bs
+
 import requests
 from pprint import pprint
 import ast

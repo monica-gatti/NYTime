@@ -17,8 +17,6 @@ class NyTimesSpider(scrapy.Spider):
             yield scrapy.Request(
                 url, callback = self.url_parse, headers=ast.literal_eval(getUserAgent(user_agent_="MOZILLA_USER_AGENT")))
 
-
-
     def url_parse(self, response):
         books = []
         data = json.loads(response.text)
@@ -33,8 +31,6 @@ class NyTimesSpider(scrapy.Spider):
                 book['amazon_product_url'], 
                 callback = self.parse
             )
-
-
 
     def parse(self, response):
         title = response.xpath("//span[@id='productTitle']//text()").get().strip()
