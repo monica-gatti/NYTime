@@ -44,25 +44,3 @@ class AmazonPipeline:
         resp = es.create.index(index='myindex', body=data)
         print(resp)
 
-
-
-
-
-"""
-    def ingestForES(title: str, price: int,ratings: int,url) -> None:                 
-
-        es_url = "http://34.255.105.149:9200"
-        es_index = "scrapy"
-
-        es = es(es_url,basic_auth=("elastic", "datascientest"), verify_certs=False)  
-        doc = {
-            'title': title,
-            'price':  price,
-            'ratings':ratings,
-            'url': url,
-        }
-        resp = es.index(index= es_index, document=doc)
-        print(resp)
-      
-
-"""
