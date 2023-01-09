@@ -11,4 +11,4 @@ SCRAPING:
   MOZILLA_USER_AGENT: "{'User-Agent': 'Mozilla/5.0'}"
 ELASTIC_SEARCH:
   API_URL: "http://34.250.64.94:9200"
-  INDEX: "articles"
+  ARTICLE_INDEX: "articles"
