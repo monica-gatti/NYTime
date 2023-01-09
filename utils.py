@@ -41,13 +41,14 @@ def ingestForES(slugname:str, created_date, body: str,) -> None:
     stream = open('./config/app.yaml', 'r')
     data = yaml.load(stream, Loader=yaml.BaseLoader)
     es_url = data.get('ELASTIC_SEARCH').get("API_URL")
-    es_index = data.get('ELASTIC_SEARCH').get("INDEX") 
+    es_index = data.get('ELASTIC_SEARCH').get("ARTICLE_INDEX") 
     stream.close()
     es = Elasticsearch(es_url,basic_auth=("elastic", "datascientest"), verify_certs=False)  
     doc = {
         'slug_name': slugname,
         'body':  body,
         'created_date': created_date,
+        'word_count': len(body)
     }
     resp = es.index(index=es_index, id=slugname, document=doc)
     print(resp['result'])
