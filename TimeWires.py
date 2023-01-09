@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen, Request
 import requests
 from pprint import pprint
-from utils import getNYTUrl, getUserAgent, getStringCurrentDate, ingestForES
+from utils import getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
 import ast
 from datetime import datetime
 from time import sleep
@@ -21,6 +21,7 @@ for element in sectionListData["results"][1:]:
     cur = con.cursor()
     section = element["section"]
     timeWireApiUrl = getNYTUrl(context_="TIME_WIRES_CONTEXT")
+    
     sectionUrl = timeWireApiUrl % section
     sectionData = requests.get(sectionUrl).text
     sectionData = json.loads(sectionData)
@@ -35,7 +36,7 @@ for element in sectionListData["results"][1:]:
             for t in soup.findAll("p", attrs={"class":"css-at9mc1 evys1bk0"}):
                 body = body + t.text
             result["body"] = body
-            ingestForES(result["slug_name"], result["created_date"], body)
+            ingestArticlesEs(result["slug_name"], result["created_date"], body)
         except:
             available = 'N'
         try:
