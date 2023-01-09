@@ -39,7 +39,7 @@ def getNYTUrl(context_:contexts) -> str:
     key = str(getNYTkey())
     return str(baseUrl) + str(context) + key
 
-def ingestForES(slugname:str, created_date, body: str,) -> None:
+def ingestArticlesEs(slugname:str, created_date, body: str,) -> None:
     stream = open('./config/app.yaml', 'r')
     data = yaml.load(stream, Loader=yaml.BaseLoader)
     es_url = data.get('ELASTIC_SEARCH').get("API_URL")
@@ -53,6 +53,26 @@ def ingestForES(slugname:str, created_date, body: str,) -> None:
     }
     resp = es.index(index=es_index, id=slugname, document=doc)
     print(resp['result'])
+
+
+def ingestBooksEs(title: str, author: str,rank: int,description) -> None:                 
+    stream = open('./config/app.yaml', 'r')
+    data = yaml.load(stream, Loader=yaml.BaseLoader)
+    es_url = data.get('ELASTIC_SEARCH').get("API_URL")
+    es_index = data.get('ELASTIC_SEARCH').get("INDEX") 
+    stream.close()
+    es = Elasticsearch(es_url,basic_auth=("elastic", "datascientest"), verify_certs=False)  
+    doc = {
+        'title': title,
+        'author':  author,
+        'rank':rank,
+        'description': description,
+    }
+    resp = es.index(index=es_index, document=doc)
+    print(resp)
+
+
+
 
 def getStringCurrentDate() -> str:
     now = datetime.now()
