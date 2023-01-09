@@ -1,8 +1,7 @@
 
 import json
 from urllib.request import urlopen, Request
-from utils import getNYTUrl,  getStringCurrentDate, ingestForES
-
+from utils import getNYTUrl,  getStringCurrentDate, ingestBooksEs
 import requests
 from pprint import pprint
 import ast
@@ -21,12 +20,12 @@ for lists in data['results']['lists']:
         cur = con.cursor()
         try:  
             cur.execute("INSERT INTO books_full_overview VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-            (book['title'], book['author'], book['contributor'], book['publisher'], book['rank'], book['primary_isbn10'], book['primary_isbn13'],book['updated_date'], book['created_date'],book[' amazon_product_url']))
+            (book['title'], book['author'], book['contributor'], book['publisher'], book['rank'], book['primary_isbn10'], book['primary_isbn13'],book['updated_date'], book['created_date'],book['amazon_product_url']))
             con.commit()     
         except  sqlite3.IntegrityError as err:
             print(f"Integritya error {err=}, {type(err)=}")
         try:
-            ingestForES(book['title'], book['author'], book['contributor'], book['publisher'],book[' descriptionbook'], book['rank'], book['primary_isbn10'], book['primary_isbn13'],book['updated_date'], book['created_date'],book[' amazon_product_url'], book['weeks_on_list'], book[' buy_links'])
+            ingestBooksEs(book['title'], book['author'], book['rank'],book['description'], )
         except Exception as err:
             print(f"Unexpected {err=}, {type(err)=}")
     con.close()
