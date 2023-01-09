@@ -1,0 +1,70 @@
+#!C:\Source_code\NYTime\venv\Scripts\python.exe
+
+# Copyright (c) 2013, Daniel Gamez
+# with the guidance of Israel Herraiz at URJC
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without 
+# modification, are permitted provided that the following conditions are met:
+# 
+# 1) Redistributions of source code must retain the above copyright notice, 
+#    this list of conditions and the following disclaimer.
+# 
+# 2) Redistributions in binary form must reproduce the above copyright notice, 
+#    this list of conditions and the following disclaimer in the documentation 
+#    and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+# POSSIBILITY OF SUCH DAMAGE.
+#
+
+import argparse
+import pywebcrawler
+
+def main ():
+    """This program crawls into the URL provided.
+    It shows a list with the links present in the main URL,
+    and the following depth levels indicated by the user.
+    Example execution call:
+    webcrawler -n 1 http://www.domain.net
+    """
+    # Define parser to get arguments on the command line
+    parser = argparse.ArgumentParser ( description = "Web Crawler" )
+    parser.add_argument ('url', nargs=1, help='Target URL')
+    parser.add_argument ('-n' ,
+	    '--number-of-levels', 
+	    type=int, 
+	    default=1, 
+	    help='Specify the number of levels to dive into. It assumes "-n 0" is the current URL with no deep.')
+    
+    args = parser.parse_args ()
+
+    # Obtain the URL from command line
+    url = args.url.pop ()
+    
+    # Obtain the number of levels to dive into the url
+    depth = args.number_of_levels
+    
+    # Validate URL and get URL base
+    b = pywebcrawler.validate_url (url)
+
+    # Abort execution if the provided URL is not valid
+    if not b:
+        print "You must provide a valid URL!"
+        return
+      
+    # Call recursive function links_list with the URL and DEPTH
+    pywebcrawler.links_list(url, depth)
+
+
+if __name__ == '__main__':
+    main ()

@@ -1,0 +1,11 @@
+README.rst
+setup.cfg
+setup.py
+ScrapyElasticSearch.egg-info/PKG-INFO
+ScrapyElasticSearch.egg-info/SOURCES.txt
+ScrapyElasticSearch.egg-info/dependency_links.txt
+ScrapyElasticSearch.egg-info/requires.txt
+ScrapyElasticSearch.egg-info/top_level.txt
+scrapyelasticsearch/__init__.py
+scrapyelasticsearch/scrapyelasticsearch.py
+scrapyelasticsearch/transportNTLM.py

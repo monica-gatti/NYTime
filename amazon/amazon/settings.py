@@ -1,3 +1,5 @@
+import sys
+from scrapy import crawler
 # Scrapy settings for amazon project
 #
 # For simplicity, this file contains only settings considered important or
@@ -62,9 +64,20 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'amazon.pipelines.AmazonPipeline': 300,
-#}
+
+#ITEM_PIPELINES = {'amazon.pipelines.FilterWordsPipeline': 1}
+
+ITEM_PIPELINES = {
+    'amazon.pipelines.AmazonPipeline': 300,
+    'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
+}
+
+
+#ELASTICSEARCH_SERVERS = [{'34.255.105.149': 9200}]
+ELASTICSEARCH_SERVERS = 'http://34.255.105.149:9200'
+ELASTICSEARCH_INDEX = 'myindex'
+ELASTICSEARCH_TYPE = 'items'
+#ELASTICSEARCH_UNIQ_KEY = 'url'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -86,8 +99,3 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-
-
-ITEM_PIPELINES = {
-   'amazon.pipelines.AmazonPipeline': 300,
-}

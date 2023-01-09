@@ -2,35 +2,34 @@ import scrapy
 import json
 from amazon.items import AmazonItem
 import ast
-from amazon.amazon.spiders import utils
-from utils import getNYTUrl, getUserAgent
+from elasticsearch import Elasticsearch as es
+#from utils import getNYTUrl, getUserAgent
+#import sys
+#sys.path.append('/.../amazon/amazon/spiders')
+from requests import Request
+#from time import sleep
 
 class NyTimesSpider(scrapy.Spider):
 
     name = 'ny-times'
-    start_urls = getNYTUrl(context_="BOOKS_CONTEXT")
-
+    #start_urls = getNYTUrl(context_="BOOKS_CONTEXT")
+    start_urls= ["https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=CKjGFh7CrNKbbE3ZBeHKdeANKwxkm5c6 "]
 
     def start_requests(self):
 
         for url in self.start_urls:
             yield scrapy.Request(
-                url, callback = self.url_parse, headers=ast.literal_eval(getUserAgent(user_agent_="MOZILLA_USER_AGENT")))
+                url, callback = self.url_parse, headers=ast.literal_eval("{'User-Agent':'Mozilla/5.0'}"))
 
     def url_parse(self, response):
         books = []
         data = json.loads(response.text)
         for lists in data['results']['lists']:
             for book in lists['books']:
-                books.append({
-                    'amazon_product_url' : book['amazon_product_url'],
-                })
-        
-        for book in books:
-            yield scrapy.Request(
+                yield scrapy.Request(
                 book['amazon_product_url'], 
-                callback = self.parse
-            )
+                callback = self.parse)
+                #sleep(1)
 
     def parse(self, response):
         title = response.xpath("//span[@id='productTitle']//text()").get().strip()
@@ -42,3 +41,5 @@ class NyTimesSpider(scrapy.Spider):
         loader['price'] = price
         loader['ratings'] = ratings
         yield loader
+        
+

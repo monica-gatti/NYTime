@@ -1,0 +1,11 @@
+scrapy
+elasticsearch
+
+[ntlm]
+requests_ntlm>=0.2.0
+
+[requests]
+requests>=2.10.0
+
+[ssl]
+certifi>=2017.7.27.1

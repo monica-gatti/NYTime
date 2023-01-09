@@ -53,7 +53,7 @@ C:.
 
     Finally: If you succeed to create the Job. You should "pip install crawl" to use the crawl methode and then type the command below to run the program(I think you should be under the folder where the ny_times resides):
 
-        scrapy crawl ny-times -o ny_time.json     
+        scrapy crawl ny-times -o ny_time.json    
             #the ny_times is the name of the Project 
 NOTE: don't forget to install scrapy: 
             pip install scrapy
