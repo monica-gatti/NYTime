@@ -10,10 +10,5 @@ SCRAPING:
   CROME_USER_AGENT: "{'User-Agent': 'Chrome/39.0.2171.95'}"  
   MOZILLA_USER_AGENT: "{'User-Agent': 'Mozilla/5.0'}"
 ELASTIC_SEARCH:
-<<<<<<< HEAD
-  API_URL: "http://34.255.105.149:9200"
-  INDEX: "test-index"
-=======
-  API_URL: "http://34.250.64.94:9200"
+  API_URL: "http://52.17.139.102:9200"
   ARTICLE_INDEX: "articles"
->>>>>>> 850c23a8b93bc1766923feed59cd1882c28b82ef
