@@ -1,6 +1,9 @@
 # NYTime
 Using NY Times API to get Articles, Books and Time Wire
 
+### SQlite
+If you execute on your client, first launch .\db-model\sqlite-script.py in order to create the db tables
+
 ### Scrapy:
 Now we should create our Spider Project of which will create a Tree of our Project as follow:
 Here I'll try explain this step using my propre Project Amazon(the idea behind is to gather all the NYTIMES BOOKS available links that are used to reveal book'sprices, ratings, description ans so on..):
