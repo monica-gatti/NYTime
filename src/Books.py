@@ -1,14 +1,14 @@
 
 import json
 from urllib.request import urlopen, Request
-from utils import getNYTUrl,  getStringCurrentDate, ingestBooksEs
+from utils import logActivity, getNYTUrl,  getStringCurrentDate, ingestBooksEs
 import requests
 from pprint import pprint
 import ast
 import sqlite3 
 import logging
 
-logging.basicConfig(filename="./output/logBooks.log", level=logging.INFO)
+logActivity(getStringCurrentDate() + "_logBooks.log")
 
 BOOKS_CONTEXT = getNYTUrl(context_="BOOKS_CONTEXT")
 data = requests.get(BOOKS_CONTEXT).text

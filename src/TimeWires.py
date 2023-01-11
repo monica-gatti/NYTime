@@ -3,14 +3,14 @@ from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen, Request
 import requests
 from pprint import pprint
-from utils import getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
+from utils import logActivity, getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
 import ast
 from datetime import datetime
 from time import sleep
 import sqlite3
 import logging
 
-logging.basicConfig(filename="./output/logTimeWires.log", level=logging.INFO)
+logActivity(getStringCurrentDate() + "_timewires.log")
 
 sectionListUrl = getNYTUrl(context_="TIME_WIRES_SECTIONS_LIST")
 sectionListData = requests.get(sectionListUrl).text
@@ -47,10 +47,6 @@ for element in sectionListData["results"][1:]:
             print(f"Integritya error {err=}, {type(err)=}")
         except Exception as err:
             print(f"Unexpected {err=}, {type(err)=}")
-    con.close()
-
-    filename = "./output/" + section + getStringCurrentDate() + "_timewires.json" 
-    with open(filename, "w") as jsonFile:
-        json.dump(sectionData, jsonFile)    
+    con.close()  
     sleep(2)
 

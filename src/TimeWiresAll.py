@@ -3,15 +3,14 @@ from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen, Request
 import requests
 from pprint import pprint
-from utils import getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
+from utils import logActivity, getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
 import ast
 from datetime import datetime
 from time import sleep
 import sqlite3
 import logging
 
-
-logging.basicConfig(filename="./output/logTimeWires.log", level=logging.INFO)
+logActivity(getStringCurrentDate() + "_timewiresall.log")
 
 timeWireApiUrl = getNYTUrl(context_="TIME_WIRES_CONTEXT_ALL")
 sectionData = requests.get(timeWireApiUrl).text
@@ -49,8 +48,9 @@ for result in sectionData["results"]:
     con.close()
     sleep(1)
 
-filename = "./output/all_" + getStringCurrentDate() + "_timewires.json" 
-with open(filename, "w") as jsonFile:
-    json.dump(sectionData, jsonFile)    
+#decomment only to save all the json response in file
+#filename = "./output/all_" + getStringCurrentDate() + "_timewires.json" 
+#with open(filename, "w") as jsonFile:
+#    json.dump(sectionData, jsonFile)    
 sleep(6)
 

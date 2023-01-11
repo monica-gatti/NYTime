@@ -1,6 +1,6 @@
 import json
 from urllib.request import urlopen, Request
-from utils import getNYTUrl,  getStringCurrentDate, ingestForES
+from utils import logActivity, getNYTUrl,  getStringCurrentDate, ingestForES
 from bs4 import BeautifulSoup as bs
 import requests
 from pprint import pprint
@@ -9,7 +9,8 @@ import sqlite3
 import logging
 import yaml
 from time import sleep
-logging.basicConfig(filename="./output/logBooks.log", level=logging.INFO)
+
+logActivity(getStringCurrentDate() + "_logBookPrice.log")
 
 BOOKS_CONTEXT = getNYTUrl(context_="BOOKS_CONTEXT")
 data = requests.get(BOOKS_CONTEXT).text
