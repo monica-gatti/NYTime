@@ -49,16 +49,19 @@ def ingestArticlesEs(slugname:str, created_date, body: str,) -> None:
     es_url = data.get('ELASTIC_SEARCH').get("API_URL")
     es_index = data.get('ELASTIC_SEARCH').get("ARTICLE_INDEX") 
     stream.close()
-    es = Elasticsearch(es_url,basic_auth=("elastic", "datascientest"), verify_certs=False)  
-    doc = {
-        'slug_name': slugname,
-        'body':  body,
-        'created_date': created_date,
-        'word_count': len(body)
-    }
-    resp = es.index(index=es_index, id=slugname, document=doc)
-    print(resp['result'])
-
+    try:
+        es = Elasticsearch(es_url,basic_auth=("elastic", "datascientest"), verify_certs=False)  
+        doc = {
+            'slug_name': slugname,
+            'body':  body,
+            'created_date': created_date,
+            'word_count': len(body)
+        }
+        resp = es.index(index=es_index, id=slugname, document=doc)
+        print(resp['result'])
+    except Exception as err:
+        print(f"Unexpected {err=}, {type(err)=}")
+        #raise 
 
 def ingestBooksEs(title: str, author: str,rank: int,description) -> None:                 
     stream = open(appFileName, 'r')
