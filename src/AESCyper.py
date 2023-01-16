@@ -19,9 +19,7 @@ def sym_decrypt(data):
     return cipher.decrypt(binascii.unhexlify(data)).decode("utf8").rstrip()
 
 #example
-#Ev3ryD%40ta
-#CKjGFh7CrNKbbE3ZBeHKdeANKwxkm5c6
-# enc = sym_encrypt("datascientest")
+# enc = sym_encrypt("ciaociao")
 # print(enc)
 # dec = sym_decrypt(enc)
 # print(dec)

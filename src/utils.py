@@ -6,7 +6,7 @@ from typing import Literal
 from datetime import datetime
 from elasticsearch import Elasticsearch
 import logging
-from AESCyper import sym_decrypt
+from AESCyper import sym_decrypt, sym_encrypt
 from sqlalchemy.engine import Engine
 
 dirname = os.path.dirname(__file__)

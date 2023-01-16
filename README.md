@@ -2,6 +2,25 @@
 Using NY Times API to get Articles, Books and Time Wire.
 ## Set up
 The application stores Article metadata in a Postgres database and article text in Elastic Search index.
+### Encrypt sensitive informations
+Password for invoking external service in your python application needs to be encrypted. With the following steps, you will encrypt strings with AES cypher with a 128-bit or 256-bit key.
+1. Launch for windows
+```
+pip install pycryptodome
+```
+or for Ubuntu
+```
+pip install crypto
+```
+2. Generate a 16 byte key and save it in en environment variable "NYTIMES_CYPHER_KEY". You can use this tool https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx , set "Encryption Key" and choose 128-bit ( to get a key lenght of 128/8 = 16 byte) or 256-bit to have a
+Head the AESCypher.py file, decomment the last rows and set the password you want to encrypt:
+```
+enc = sym_encrypt("ciaociao")
+print(enc)
+dec = sym_decrypt(enc)
+print(dec)
+```
+3. Configure the encripted password in config/nycred.py file.
 ### Database Set up
 Provide a Postgres database, assign the database name in app.yaml.
 Launch .\db-model\sqlite-script.py in order to create the db tables.
