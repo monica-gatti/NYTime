@@ -20,7 +20,7 @@ print(enc)
 dec = sym_decrypt(enc)
 print(dec)
 ```
-3. Configure the encripted password in config/nycred.py file.
+3. Configure the encrypted password in config/nycred.py file.
 ### Database Set up
 Provide a Postgres database, assign the database name in app.yaml.
 Launch .\src\model.py in order to create the db tables.
