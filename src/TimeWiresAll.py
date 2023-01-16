@@ -2,19 +2,24 @@ import json
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen, Request
 import requests
-from pprint import pprint
-from utils import logActivity, getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
+from model import Article, Author
+from utils import dbPostgresGetEngine, logActivity, getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
 import ast
 from datetime import datetime
 from time import sleep
-import sqlite3
-import logging
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from psycopg2 import IntegrityError, errors
 
+UniqueViolation = errors.lookup('23505') 
 logActivity(getStringCurrentDate() + "_timewiresall.log")
 
 timeWireApiUrl = getNYTUrl(context_="TIME_WIRES_CONTEXT_ALL")
 sectionData = requests.get(timeWireApiUrl).text
 sectionData = json.loads(sectionData)
+engine = dbPostgresGetEngine()
+Session = sessionmaker(bind=engine)
+s = Session()
 for result in sectionData["results"]:
     available = "Y"
     url = result["url"]
@@ -30,27 +35,34 @@ for result in sectionData["results"]:
     except:
         available = "N"
     authors = result["byline"].replace("BY", "").replace("AND", ",").split(",")
-    con = sqlite3.connect("nytimes.db")
-    cur = con.cursor()
     try:
-        cur.execute("INSERT INTO Articles VALUES(?, ?, ?, ?, ?, ?, ?, ?)", 
-        ([result["slug_name"], result["created_date"], result["title"], result["section"], result["subsection"], url, available, getStringCurrentDate()]))
-        con.commit()
-        for author in authors:
-            cur.execute("INSERT INTO authors VALUES(?,?)",
-            ([result["slug_name"], author]))
-            con.commit()
-    except sqlite3.IntegrityError as err:
-        print(f"Integrity error {err=}, {type(err)=}")
+        article = Article( slug_id= result["slug_name"],article_date =result["created_date"],title = result["title"],section = result["section"],
+            subsection = result["subsection"],url = url,webPageAvailability = 'Y',apiInvokeDate = datetime.now())
+        s.add(article)
+        s.flush()
+        s.commit()
+        for item in authors:
+            author = Author( slug_id = result["slug_name"] , fullname = item)
+            s.add(author)
+            s.flush()
+            s.commit()
+    except UniqueViolation as uv:
+        continue    
+    except IntegrityError as e:
+        assert isinstance(e.orig, UniqueViolation) 
+        continue
+    except SQLAlchemyError as err:
+        print(str(err))
+        s.rollback()
+        continue
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
         raise
-    con.close()
-    sleep(1)
+    s.close()
+sleep(6)
 
 #decomment only to save all the json response in file
 #filename = "./output/all_" + getStringCurrentDate() + "_timewires.json" 
 #with open(filename, "w") as jsonFile:
 #    json.dump(sectionData, jsonFile)    
-sleep(6)
 

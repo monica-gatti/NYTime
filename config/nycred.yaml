@@ -1,2 +1,6 @@
 API:
-  api_key: CKjGFh7CrNKbbE3ZBeHKdeANKwxkm5c6
+  api_key: 89d723860a8c2e4cee85d5173e55c0486d6d2f03ab90fc73b75b07faebbd11ee1540c65dac47bfef8d07f77b9faece87
+DB:
+  pwd: 8fea7ab335a03c3bacbfff557c30d332
+ELASTIC_SEARCH:
+  pwd: aefd3da03f87706af2bffb062830d332

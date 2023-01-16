@@ -2,29 +2,31 @@ import json
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen, Request
 import requests
-from pprint import pprint
-from utils import logActivity, getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
+from model import Article, Author
+from utils import dbPostgresGetEngine, logActivity, getNYTUrl, getUserAgent, getStringCurrentDate, ingestArticlesEs
 import ast
 from datetime import datetime
 from time import sleep
-import sqlite3
-import logging
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError
+from psycopg2 import IntegrityError, errors
 
 logActivity(getStringCurrentDate() + "_timewires.log")
+UniqueViolation = errors.lookup('23505') 
 
 sectionListUrl = getNYTUrl(context_="TIME_WIRES_SECTIONS_LIST")
 sectionListData = requests.get(sectionListUrl).text
 sectionListData = json.loads(sectionListData)
-
+engine = dbPostgresGetEngine()
 for element in sectionListData["results"][1:]:
-    con = sqlite3.connect("nytimes1.db")
-    cur = con.cursor()
     section = element["section"]
     timeWireApiUrl = getNYTUrl(context_="TIME_WIRES_CONTEXT")
-    
     sectionUrl = timeWireApiUrl % section
     sectionData = requests.get(sectionUrl).text
     sectionData = json.loads(sectionData)
+    Session = sessionmaker(bind=engine)
+    s = Session()
     for result in sectionData["results"]:
         available = "Y"
         url = result["url"]
@@ -39,14 +41,31 @@ for element in sectionListData["results"][1:]:
             ingestArticlesEs(result["slug_name"], result["created_date"], body)
         except:
             available = 'N'
+        authors = result["byline"].replace("BY", "").replace("AND", ",").split(",")
+
         try:
-            cur.execute("INSERT INTO ArticlesSection VALUES(?, ?, ?, ?, ?, ?, ?, ?)", 
-            ([result["slug_name"], result["created_date"], result["title"], result["section"], result["subsection"], url, available, getStringCurrentDate()]))
-            con.commit()
-        except sqlite3.IntegrityError as err:
-            print(f"Integritya error {err=}, {type(err)=}")
+            article = Article( slug_id= result["slug_name"],article_date =result["created_date"],title = result["title"],section = result["section"],
+            subsection = result["subsection"],url = url,webPageAvailability = 'Y',apiInvokeDate = datetime.now())
+            s.add(article)
+            s.flush()
+            s.commit()
+            for item in authors:
+                author = Author( slug_id = result["slug_name"] , fullname = item)
+                s.add(author)
+                s.flush()
+                s.commit()
+        except UniqueViolation as uv:
+            continue    
+        except IntegrityError as e:
+            assert isinstance(e.orig, UniqueViolation) 
+            continue
+        except SQLAlchemyError as err:
+            print(str(err))
+            s.rollback()
+            continue
         except Exception as err:
             print(f"Unexpected {err=}, {type(err)=}")
-    con.close()  
-    sleep(2)
+            raise
+s.close()
+sleep(2)
 

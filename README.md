@@ -1,9 +1,37 @@
 # NYTime
-Using NY Times API to get Articles, Books and Time Wire
-
-### SQlite
-If you execute on your client, first launch .\db-model\sqlite-script.py in order to create the db tables
-
+Using NY Times API to get Articles, Books and Time Wire.
+## Set up
+The application stores Article metadata in a Postgres database and article text in Elastic Search index.
+### Database Set up
+Provide a Postgres database, assign the database name in app.yaml.
+Launch .\db-model\sqlite-script.py in order to create the db tables.
+### ElasticSearch
+Create an index with the following instruction and save the index name in app.yaml:
+```
+PUT /articles
+{
+  "settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 2
+  },
+  "mappings": {
+    "properties": {
+      "slug_name": {
+        "type": "keyword"
+      },
+      "body": {
+        "type": "text"
+      },
+      "created_date": {
+        "type": "date"
+      },
+      "word_count": {
+        "type": "integer"
+      }
+    }
+  }
+}
+```
 ### Scrapy:
 Now we should create our Spider Project of which will create a Tree of our Project as follow:
 Here I'll try explain this step using my propre Project Amazon(the idea behind is to gather all the NYTIMES BOOKS available links that are used to reveal book'sprices, ratings, description ans so on..):

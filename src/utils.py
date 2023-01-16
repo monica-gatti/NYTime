@@ -1,9 +1,13 @@
+import psycopg2
+from sqlalchemy import create_engine
 import yaml
 import os
 from typing import Literal
 from datetime import datetime
 from elasticsearch import Elasticsearch
 import logging
+from AESCyper import sym_decrypt
+from sqlalchemy.engine import Engine
 
 dirname = os.path.dirname(__file__)
 appFileName = os.path.join(dirname, '.\\..\\config\\app.yaml')
@@ -24,9 +28,9 @@ def getUserAgent(user_agent_: user_agents) -> str:
     return header
     
 def getNYTkey() -> str:
-    stream = open(credFileName)
+    stream = open(credFileName, 'r')
     data = yaml.load(stream, Loader=yaml.BaseLoader)
-    key = data.get('API').get('api_key')
+    key = sym_decrypt(data.get('API').get('api_key')) 
     stream.close()
     return key
 
@@ -49,8 +53,13 @@ def ingestArticlesEs(slugname:str, created_date, body: str,) -> None:
     es_url = data.get('ELASTIC_SEARCH').get("API_URL")
     es_index = data.get('ELASTIC_SEARCH').get("ARTICLE_INDEX") 
     stream.close()
+    stream = open(credFileName, 'r')
+    data = yaml.load(stream, Loader=yaml.BaseLoader)
+    es_pwd =  sym_decrypt(data.get('ELASTIC_SEARCH').get('pwd'))
+    stream.close()
+
     try:
-        es = Elasticsearch(es_url,basic_auth=("elastic", "datascientest"), verify_certs=False)  
+        es = Elasticsearch(es_url,basic_auth=("elastic", es_pwd), verify_certs=False)  
         doc = {
             'slug_name': slugname,
             'body':  body,
@@ -61,7 +70,6 @@ def ingestArticlesEs(slugname:str, created_date, body: str,) -> None:
         print(resp['result'])
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
-        #raise 
 
 def ingestBooksEs(title: str, author: str,rank: int,description) -> None:                 
     stream = open(appFileName, 'r')
@@ -69,11 +77,14 @@ def ingestBooksEs(title: str, author: str,rank: int,description) -> None:
     es_url = data.get('ELASTIC_SEARCH').get("API_URL")
     es_index = data.get('ELASTIC_SEARCH').get("INDEX") 
     stream.close()
-    es = Elasticsearch(es_url,basic_auth=("elastic", "datascientest"), verify_certs=False)  
+    stream = open(credFileName, 'r')
+    data = yaml.load(stream, Loader=yaml.BaseLoader)
+    es_pwd =  sym_decrypt(data.get('ELASTIC_SEARCH').get('pwd'))
+    es = Elasticsearch(es_url,basic_auth=("elastic", es_pwd), verify_certs=False)  
     doc = {
         'title': title,
         'author':  author,
-        'rank':rank,
+        'rank': rank,
         'description': description,
     }
     resp = es.index(index=es_index, document=doc)
@@ -86,3 +97,24 @@ def getStringCurrentDate() -> str:
 def logActivity(filename: str) -> None:
     loggingFileName = os.path.join(dirname, ".\\..\\output\\" + filename)
     logging.basicConfig(filename=loggingFileName, level=logging.INFO)
+
+
+def dbPostgresGetEngine() -> Engine:
+    stream = open(credFileName, 'r')
+    data = yaml.load(stream, Loader=yaml.BaseLoader)
+    pwd =  sym_decrypt(data.get('DB').get('pwd'))
+    connstr = "postgresql://postgres:" + pwd + "@localhost:5432/NyTimes"
+    return create_engine(connstr)
+
+def dbPostgresOpenConnection():
+    stream = open(credFileName, 'r')
+    data = yaml.load(stream, Loader=yaml.BaseLoader)
+    pwd =  sym_decrypt(data.get('DB').get('pwd'))
+    
+    return psycopg2.connect(
+        host="localhost",
+        database="NyTimes",
+        user="postgres",
+        password=sym_decrypt(pwd),
+        port=5432)
+
