@@ -23,7 +23,7 @@ print(dec)
 3. Configure the encripted password in config/nycred.py file.
 ### Database Set up
 Provide a Postgres database, assign the database name in app.yaml.
-Launch .\db-model\sqlite-script.py in order to create the db tables.
+Launch .\src\model.py in order to create the db tables.
 ### ElasticSearch
 Create an index with the following instruction and save the index name in app.yaml:
 ```
