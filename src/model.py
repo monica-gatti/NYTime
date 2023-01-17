@@ -5,8 +5,9 @@ from sqlalchemy.sql import func
 from sqlalchemy import create_engine
 from Crypto import Random
 from Crypto.Cipher import AES
+from utils import dbPostgresGetEngine
 
-engine = create_engine("postgresql://postgres:Ev3ryD%40ta@localhost:5432/NyTimes")
+engine = dbPostgresGetEngine()
 Base = declarative_base()
 class Article(Base):
     """Article."""
